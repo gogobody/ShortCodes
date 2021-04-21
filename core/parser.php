@@ -25,9 +25,6 @@ function add_shortcode( $tag, $callback ) {
 
 function do_shortcode( $content, $ignore_html = false ,$obj = null) {
     global $shortcode_tags;
-    global $typecho_archive;
-    $typecho_archive = $obj;
-
     if ( false === strpos( $content, '[' ) ) {
         return $content;
     }
@@ -46,7 +43,7 @@ function do_shortcode( $content, $ignore_html = false ,$obj = null) {
     $content = do_shortcodes_in_html_tags( $content, $ignore_html, $tagnames );
 
     $pattern = get_shortcode_regex( $tagnames );
-    $content = preg_replace_callback( "/$pattern/", 'do_shortcode_tag', $content );
+    $content = preg_replace_callback( "/$pattern/", 'do_shortcode_tag', $content);
 
     // Always restore square braces so we don't break things like <!--[if IE ]>.
     $content = unescape_invalid_shortcodes( $content );
@@ -743,6 +740,7 @@ function shortcode_parse_atts( $text ) {
 
 function do_shortcode_tag( $m ) {
     global $shortcode_tags;
+    global $typecho_archive;
 
     // Allow [[foo]] syntax for escaping a tag.
     if ( '[' === $m[1] && ']' === $m[6] ) {
@@ -762,7 +760,6 @@ function do_shortcode_tag( $m ) {
 
 
     $content = isset( $m[5] ) ? $m[5] : null;
-
     $output = $m[1] . call_user_func( $shortcode_tags[ $tag ], $attr, $content, $tag ) . $m[6];
 
     return $output;

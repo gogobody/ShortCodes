@@ -1,5 +1,8 @@
 <?php
 
+function preHandle($text,$obj){
+    return $obj->isMarkdown?$obj->markdown($text):$obj->autoP($text);
+}
 /*
  * 获取对应属性，并添加符号变量
  */
@@ -26,6 +29,10 @@ function shortcode_atts( $pairs, $atts, $shortcode = '' )
  * @return string
  */
 function wpbutton( $atts, $content = null ) {
+    global $typecho_archive;
+    // 预处理 内部文字
+    $content = preHandle($content,$typecho_archive);
+
     extract(
         shortcode_atts(
             array(
@@ -55,6 +62,8 @@ function wpbutton( $atts, $content = null ) {
 function wp_reply_to_read($atts, $content = null)
 {
     global $typecho_archive;
+    // 预处理 内部文字
+    $content = preHandle($content,$typecho_archive);
     extract(
         shortcode_atts(
             array(
@@ -116,6 +125,8 @@ function secrets_content($atts, $content = null)
     $qrcode = $poptions->GzhImgUrl;
 
     global $typecho_archive;
+    // 预处理 内部文字
+    $content = preHandle($content,$typecho_archive);
 
     extract(shortcode_atts(array('key' => null, 'keyword' => null, 'gname'=> '即刻学术'), $atts));
     if (isset($_POST['secret_key']) && $_POST['secret_key'] == $key) {
@@ -135,7 +146,9 @@ add_shortcode('wm_gzh', 'secrets_content');
 function wp_tab_group($atts, $content = null)
 {
     $GLOBALS['wp_tab_count'] = 0;
-    do_shortcode($content);
+    global $typecho_archive;
+
+    do_shortcode($content,false,$typecho_archive);
     if (is_array($GLOBALS['wp-tabs'])) {
         foreach ($GLOBALS['wp-tabs'] as $tab) {
             $tabs[] = '<li><a href="#' . $tab['id'] . '">' . $tab['title'] . '</a></li>';
@@ -150,6 +163,11 @@ add_shortcode('wm_tabgroup', 'wp_tab_group');
 
 function wp_scd_tab($atts, $content = null)
 {
+    global $typecho_archive;
+
+    // 预处理 内部文字
+    $content = preHandle($content,$typecho_archive);
+
     extract(shortcode_atts(array(
         'title' => 'wp-tab %d',
         'id' => ''
@@ -192,6 +210,9 @@ add_shortcode('wm_toggle_item', 'wp_toggle_item_shortcode');
 function wpcollapse($atts, $content = null)
 {
     extract(shortcode_atts(array(""), $atts));
+    global $typecho_archive;
+    // 预处理 内部文字
+    $content = preHandle($content,$typecho_archive);
     return '<div style="position:relative">
 			    <div class="hidecontent" style="display:none">' . $content . '</div>
 		            <a class="hidetitle" style="position: absolute">

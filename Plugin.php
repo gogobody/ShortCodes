@@ -3,17 +3,16 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * ShortCodes typecho 短代码插件 by 即刻学术
  * <div class="tp_shortcodes"><a style="width:fit-content" id="tp_shortcodes">版本检测中..</div>&nbsp;</div><style>.tp_shortcodes{margin-top: 5px;}.tp_shortcodes a{background: #ff5a8f;padding: 5px;color: #fff;}</style>
- * <script>var tp_shortcodes_ver="1.0.2";function update_detec(){var container=document.getElementById("tp_shortcodes");if(!container){return}var ajax=new XMLHttpRequest();container.style.display="block";ajax.open("get","https://api.github.com/repos/gogobody/ShortCodes/releases/latest");ajax.send();ajax.onreadystatechange=function(){if(ajax.readyState===4&&ajax.status===200){var obj=JSON.parse(ajax.responseText);var newest=obj.tag_name;if(newest>tp_shortcodes_ver){container.innerHTML="发现新版本："+obj.name+'。下载地址：<a href="'+obj.zipball_url+'">点击下载</a>'+"<br>您目前的版本:"+String(tp_shortcodes_ver)+"。"+'<a target="_blank" href="'+obj.html_url+'">👉查看新版亮点</a>'}else{container.innerHTML="您目前的版本:"+String(tp_shortcodes_ver)+"。"+"您目前使用的是最新版。"}}}};update_detec();</script>
- * @package ShortCodes 
+ * <script>var tp_shortcodes_ver="1.0.3";function update_detec(){var container=document.getElementById("tp_shortcodes");if(!container){return}var ajax=new XMLHttpRequest();container.style.display="block";ajax.open("get","https://api.github.com/repos/gogobody/ShortCodes/releases/latest");ajax.send();ajax.onreadystatechange=function(){if(ajax.readyState===4&&ajax.status===200){var obj=JSON.parse(ajax.responseText);var newest=obj.tag_name;if(newest>tp_shortcodes_ver){container.innerHTML="发现新版本："+obj.name+'。下载地址：<a href="'+obj.zipball_url+'">点击下载</a>'+"<br>您目前的版本:"+String(tp_shortcodes_ver)+"。"+'<a target="_blank" href="'+obj.html_url+'">👉查看新版亮点</a>'}else{container.innerHTML="您目前的版本:"+String(tp_shortcodes_ver)+"。"+"您目前使用的是最新版。"}}}};update_detec();</script>
+ * @package ShortCodes
  * @author gogobody
- * @version 1.0.2
+ * @version 1.0.3
  * @link https://ijkxs.com
  */
 require_once 'component/TOC.php';
 //require(__DIR__ . DIRECTORY_SEPARATOR . "Action.php");
 require_once 'core/ShortCodeCore.php';
 require_once 'core/constants.php';
-
 class ShortCodes_Plugin implements Typecho_Plugin_Interface
 {
     /**
@@ -38,7 +37,7 @@ class ShortCodes_Plugin implements Typecho_Plugin_Interface
      * @access public
      * @var bool
      */
-    public static $isForce = false;
+    public static $isForce = true;
 
     /**
      * 注册短代码
@@ -135,7 +134,15 @@ class ShortCodes_Plugin implements Typecho_Plugin_Interface
                     $arr = explode('=',$data);
                     $attrs_arr[$arr[0]] = trim($arr[1],'"');
                 }
-                return call_user_func($callback, $name, $attrs_arr, trim($a[3]), $a[0], $obj);
+                // markdown 需要特别处理n
+                if($obj->isMarkdown){
+                    return '!!!
+                    '.call_user_func($callback, $name, $attrs_arr, $a[3], $a[0], $obj).'
+                    !!!';
+                }else {
+                    return call_user_func($callback, $name, $attrs_arr, $a[3], $a[0], $obj);
+
+                }
             }
             else
                 return $a[0];
@@ -164,7 +171,7 @@ class ShortCodes_Plugin implements Typecho_Plugin_Interface
 
     /**
      * 激活插件方法,如果激活失败,直接抛出异常
-     * 
+     *
      * @access public
      * @return void
      * @throws Typecho_Plugin_Exception
@@ -195,7 +202,7 @@ class ShortCodes_Plugin implements Typecho_Plugin_Interface
 
     /**
      * 禁用插件方法,如果禁用失败,直接抛出异常
-     * 
+     *
      * @static
      * @access public
      * @return void
@@ -203,10 +210,10 @@ class ShortCodes_Plugin implements Typecho_Plugin_Interface
      */
     public static function deactivate(){
     }
-    
+
     /**
      * 获取插件配置面板
-     * 
+     *
      * @access public
      * @param Typecho_Widget_Helper_Form $form 配置面板
      * @return void
@@ -216,10 +223,10 @@ class ShortCodes_Plugin implements Typecho_Plugin_Interface
         $GzhImgUrl = new Typecho_Widget_Helper_Form_Element_Text('GzhImgUrl',null,'','公众号图片URL','输入公众号的二维码图片URL');
         $form->addInput($GzhImgUrl);
     }
-    
+
     /**
      * 个人用户的配置面板
-     * 
+     *
      * @access public
      * @param Typecho_Widget_Helper_Form $form
      * @return void
@@ -278,12 +285,13 @@ class ShortCodes_Plugin implements Typecho_Plugin_Interface
      * @return string
      */
     public static function content($content,$archive,$last){
+        global $typecho_archive;
+        $typecho_archive = $archive;
 
         if($last) $content = $last;
         $content = self::handle($content, $archive);
-
-//        if(Typecho_Plugin::export()['handles']['Widget_Abstract_Contents:content'] === [[__Class__,__Function__]]||self::$isForce)
-//            return $archive->isMarkdown?$archive->markdown($content):$archive->autoP($content);
+        if(Typecho_Plugin::export()['handles']['Widget_Abstract_Contents:content'] === [[__Class__,__Function__]]||self::$isForce)
+            return $archive->isMarkdown?$archive->markdown($content):$archive->autoP($content);
         return $content;
     }
 
@@ -297,6 +305,8 @@ class ShortCodes_Plugin implements Typecho_Plugin_Interface
      * @return string
      */
     public static function contentEx($content,$archive,$last){
+        global $typecho_archive;
+        $typecho_archive = $archive;
 
         if($last) $content = $last;
 
