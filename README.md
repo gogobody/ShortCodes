@@ -6,6 +6,15 @@ author: gogobody
 
 部分代码参考： https://github.com/moeshin/Typecho-Plugin-ShortCode
 
+## 注意事项：
+
+本插件需要用到 jquery，目前大部分主题都用到了，没有的话请手动引入一下。
+
+另外不支持多级嵌套！！！
+
+因为typecho 是 markdown 和 html 混编和混合解析，所以没办法实现。
+
+且插件并不适用于所有主题，请自行测试是否可用。
 
 ![](https://cdn.jsdelivr.net/gh/gogobody/blog-img/blogimg/20210421110244.png)
 
