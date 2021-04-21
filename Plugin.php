@@ -3,10 +3,10 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * ShortCodes typecho 短代码插件 by 即刻学术
  * <div class="tp_shortcodes"><a style="width:fit-content" id="tp_shortcodes">版本检测中..</div>&nbsp;</div><style>.tp_shortcodes{margin-top: 5px;}.tp_shortcodes a{background: #ff5a8f;padding: 5px;color: #fff;}</style>
- * <script>var tp_shortcodes_ver="1.0.0";function update_detec(){var container=document.getElementById("tp_shortcodes");if(!container){return}var ajax=new XMLHttpRequest();container.style.display="block";ajax.open("get","https://api.github.com/repos/gogobody/ShortCodes/releases/latest");ajax.send();ajax.onreadystatechange=function(){if(ajax.readyState===4&&ajax.status===200){var obj=JSON.parse(ajax.responseText);var newest=obj.tag_name;if(newest>tp_shortcodes_ver){container.innerHTML="发现新版本："+obj.name+'。下载地址：<a href="'+obj.zipball_url+'">点击下载</a>'+"<br>您目前的版本:"+String(tp_shortcodes_ver)+"。"+'<a target="_blank" href="'+obj.html_url+'">👉查看新版亮点</a>'}else{container.innerHTML="您目前的版本:"+String(tp_shortcodes_ver)+"。"+"您目前使用的是最新版。"}}}};update_detec();</script>
+ * <script>var tp_shortcodes_ver="1.0.1";function update_detec(){var container=document.getElementById("tp_shortcodes");if(!container){return}var ajax=new XMLHttpRequest();container.style.display="block";ajax.open("get","https://api.github.com/repos/gogobody/ShortCodes/releases/latest");ajax.send();ajax.onreadystatechange=function(){if(ajax.readyState===4&&ajax.status===200){var obj=JSON.parse(ajax.responseText);var newest=obj.tag_name;if(newest>tp_shortcodes_ver){container.innerHTML="发现新版本："+obj.name+'。下载地址：<a href="'+obj.zipball_url+'">点击下载</a>'+"<br>您目前的版本:"+String(tp_shortcodes_ver)+"。"+'<a target="_blank" href="'+obj.html_url+'">👉查看新版亮点</a>'}else{container.innerHTML="您目前的版本:"+String(tp_shortcodes_ver)+"。"+"您目前使用的是最新版。"}}}};update_detec();</script>
  * @package ShortCodes 
  * @author gogobody
- * @version 1.0.0
+ * @version 1.0.1
  * @link https://ijkxs.com
  */
 require_once 'component/TOC.php';
