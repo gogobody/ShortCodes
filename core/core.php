@@ -1,7 +1,20 @@
 <?php
-
+function strncmp_startswith($haystack, $needle) {
+    return $haystack[0] === $needle[0]
+        ? strncmp($haystack, $needle, strlen($needle)) === 0
+        : false;
+}
 function preHandle($text,$obj){
-    return $obj->isMarkdown?$obj->markdown($text):$obj->autoP($text);
+    if ($obj->isMarkdown){
+        $content  = $obj->markdown($text);
+        if (strncmp_startswith($content,'<p>')){
+            $content = ltrim($content,"<p>");
+            $content = rtrim($content,"</p>");
+        }
+    }else{
+        $content = $obj->autoP($text);
+    }
+    return $content;
 }
 /*
  * 获取对应属性，并添加符号变量
