@@ -7,11 +7,6 @@ function sc_getRandomThumbnail_($widget)
 {
 //    $random = 'https://cdn.jsdelivr.net/npm/typecho_joe_theme@4.3.5/assets/img/random/' . rand(1, 25) . '.webp';
 //    $random = 'https://picsum.photos/536/354?random='. rand(1, 50);
-    $poption = Helper::options()->plugin('JKHelper');
-
-    if ($poption->JdefaultImg){
-        return $poption->JdefaultImg;
-    }
     $random = 'https://cdn.jsdelivr.net/gh/gogobody/PicsumPlaceholder/img/536_354_webp/' . rand(0, 100) . '.webp';
 
     $pattern = '/\<img.*?src\=\"(.*?)\"[^>]*>/i';
