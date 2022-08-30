@@ -1,7 +1,8 @@
 <?php
-require_once 'ShortCodes/core/parser.php';
-require_once 'ShortCodes/core/SCUtils.php';
-require_once 'ShortCodes/core/core.php';
+define('SC_ROOT', Helper::options()->pluginDir('ShortCodes'));
+require_once SC_ROOT.'/core/parser.php';
+require_once SC_ROOT.'/core/SCUtils.php';
+require_once SC_ROOT.'/core/core.php';
 
 class ShortCodeCore{
 

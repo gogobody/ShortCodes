@@ -347,32 +347,32 @@ function do_shortcodes_in_html_tags( $content, $ignore_html, $tagnames ) {
     return $content;
 }
 
-function wp_kses_uri_attributes() {
-    $uri_attributes = array(
-        'action',
-        'archive',
-        'background',
-        'cite',
-        'classid',
-        'codebase',
-        'data',
-        'formaction',
-        'href',
-        'icon',
-        'longdesc',
-        'manifest',
-        'poster',
-        'profile',
-        'src',
-        'usemap',
-        'xmlns',
-    );
+//function wp_kses_uri_attributes() {
+//    $uri_attributes = array(
+//        'action',
+//        'archive',
+//        'background',
+//        'cite',
+//        'classid',
+//        'codebase',
+//        'data',
+//        'formaction',
+//        'href',
+//        'icon',
+//        'longdesc',
+//        'manifest',
+//        'poster',
+//        'profile',
+//        'src',
+//        'usemap',
+//        'xmlns',
+//    );
+//
+//
+//    return $uri_attributes;
+//}
 
-
-    return $uri_attributes;
-}
-
-function wp_kses_no_null( $string, $options = null ) {
+function sc_kses_no_null( $string, $options = null ) {
     if ( ! isset( $options['slash_zero'] ) ) {
         $options = array( 'slash_zero' => 'remove' );
     }
@@ -395,7 +395,7 @@ function wp_kses_one_attr( $string, $element ) {
         'name'           => true,
         'target'         => true,
     );
-    $string            = wp_kses_no_null( $string, array( 'slash_zero' => 'keep' ) );
+    $string            = sc_kses_no_null( $string, array( 'slash_zero' => 'keep' ) );
 
     // Preserve leading and trailing whitespace.
     $matches = array();
@@ -432,7 +432,7 @@ function wp_kses_one_attr( $string, $element ) {
         }
 
         // Sanitize quotes, angle braces, and entities.
-        $value = esc_attr( $value );
+        $value = sc_esc_attr( $value );
 
 //        // Sanitize URI values.
 //        if ( in_array( strtolower( $name ), $uris, true ) ) {
@@ -447,13 +447,13 @@ function wp_kses_one_attr( $string, $element ) {
     }
 
     // Sanitize attribute by name.
-    wp_kses_attr_check( $name, $value, $string, $vless, $element, $allowed_html );
+    sc_kses_attr_check( $name, $value, $string, $vless, $element, $allowed_html );
 
     // Restore whitespace.
     return $lead . $string . $trail;
 }
 
-function wp_check_invalid_utf8( $string, $strip = false ) {
+function sc_check_invalid_utf8( $string, $strip = false ) {
     $string = (string) $string;
 
     if ( 0 === strlen( $string ) ) {
@@ -492,7 +492,7 @@ function wp_check_invalid_utf8( $string, $strip = false ) {
 
     return '';
 }
-function _wp_specialchars( $string, $quote_style = ENT_NOQUOTES, $charset = false, $double_encode = false ) {
+function _sc_specialchars( $string, $quote_style = ENT_NOQUOTES, $charset = false, $double_encode = false ) {
     $string = (string) $string;
 
     if ( 0 === strlen( $string ) ) {
@@ -539,13 +539,13 @@ function _wp_specialchars( $string, $quote_style = ENT_NOQUOTES, $charset = fals
     return $string;
 }
 
-function esc_attr( $text ) {
-    $safe_text = wp_check_invalid_utf8( $text );
-    $safe_text = _wp_specialchars( $safe_text, ENT_QUOTES );
+function sc_esc_attr( $text ) {
+    $safe_text = sc_check_invalid_utf8( $text );
+    $safe_text = _sc_specialchars( $safe_text, ENT_QUOTES );
     /**
      * Filters a string cleaned and escaped for output in an HTML attribute.
      *
-     * Text passed to esc_attr() is stripped of invalid or special characters
+     * Text passed to sc_esc_attr() is stripped of invalid or special characters
      * before output.
      *
      * @since 2.0.6
@@ -556,7 +556,7 @@ function esc_attr( $text ) {
     return $safe_text;
 }
 
-function wp_kses_attr_check( &$name, &$value, &$whole, $vless, $element, $allowed_html ) {
+function sc_kses_attr_check( &$name, &$value, &$whole, $vless, $element, $allowed_html ) {
     $name_low    = strtolower( $name );
     $element_low = strtolower( $element );
 
@@ -611,7 +611,7 @@ function wp_kses_attr_check( &$name, &$value, &$whole, $vless, $element, $allowe
     if ( is_array( $allowed_attr[ $name_low ] ) ) {
         // There are some checks.
         foreach ( $allowed_attr[ $name_low ] as $currkey => $currval ) {
-            if ( ! wp_kses_check_attr_val( $value, $vless, $currkey, $currval ) ) {
+            if ( ! sc_kses_check_attr_val( $value, $vless, $currkey, $currval ) ) {
                 $name  = '';
                 $value = '';
                 $whole = '';
@@ -623,7 +623,7 @@ function wp_kses_attr_check( &$name, &$value, &$whole, $vless, $element, $allowe
     return true;
 }
 
-function wp_kses_check_attr_val( $value, $vless, $checkname, $checkvalue ) {
+function sc_kses_check_attr_val( $value, $vless, $checkname, $checkvalue ) {
     $ok = true;
 
     switch ( strtolower( $checkname ) ) {
